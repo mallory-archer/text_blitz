@@ -3,15 +3,14 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 
-# import plotly.plotly as py
+import plotly.colors as py_colors
 import plotly.graph_objs as go
-# import numpy as np
-from matplotlib import pyplot as plt
 
 import os
 import pandas as pd
 import pickle
-
+import random
+import datetime
 
 # ----- FUNCTIONS -----
 def remove_non_numeric(x):
@@ -33,11 +32,6 @@ def check_valid_phone(phone_number):
 
 
 def create_fig_data(df, phone_number):
-    # Create random data with numpy
-
-    # N = 500
-    # random_x = np.linspace(0, 1, N)
-    # random_y = np.random.randn(N)
     if phone_number is None:
         df_filtered = df
     elif check_valid_phone(phone_number):
@@ -63,40 +57,82 @@ def create_fig_data(df, phone_number):
 
 
 def create_wc_fig_data(word_clouds, select_phone, freq, select_index):
-    wc_object = word_clouds[select_phone][freq].ix[[select_index]][0]
-    return wc_object
+    if (select_phone is None) or (select_phone ==''):
+        select_data = word_clouds['all'][freq]
+        if freq == 'all':
+            # case1: select_phone is None, frequency is all
+            word_bag = select_data.values[0].words_
+        else:
+            # case2: select phone is None, frequency has index
+            if len(select_index) > 1:
+                word_bag = select_data.ix[[select_index]][0].words_
+            else:
+                word_bag = select_data.ix[select_index].values[0].words_
+    else:
+        select_data = word_clouds[select_phone][freq]
+        if freq == 'all':
+            # case3: select phone is string, frequency is all
+            word_bag = select_data.values[0].words_
+        else:
+            # case4: select phone is string, frequency has index
+            word_bag = select_data.ix[[[select_phone] + select_index]].values[0].words_
+
+    words = list(word_bag.keys())
+
+    def map_weights(orig_weight, int_min, int_max):
+        return int(orig_weight * (int_max - int_min)) + int_min
+    weights = list(word_bag.values())
+    mapped_weights = [map_weights(x, 15, 35) for x in weights]
+
+    colors = [py_colors.DEFAULT_PLOTLY_COLORS[random.randrange(1, 10)] for i in range(30)]
+    data = go.Scatter(x=[random.random() for i in range(30)],
+                      y=[random.random() for i in range(30)],
+                      mode='text',
+                      text=words,
+                      marker={'opacity': 0.3},
+                      textfont={'size': mapped_weights,
+                                'color': colors})
+    layout = go.Layout({'xaxis': {'showgrid': False, 'showticklabels': False, 'zeroline': False},
+                        'yaxis': {'showgrid': False, 'showticklabels': False, 'zeroline': False}})
+    return [data], layout
 
 
-def plot_wordcloud(wordcloud_object, plot_properties):
-    for prop in plot_properties.keys():
-        # wordcloud_object[prop] = plot_properties[prop]
-        wordcloud_object.__setattr__(prop, plot_properties[prop])
+def check_for_hover_change(clickData, select_freq):
+    if clickData is None:
+        select_freq = 'all'
+        select_index = None
+        date = None
+    else:
+        datestr = clickData['points'][0]['x']
+        date = datetime.datetime.strptime(datestr, "%Y-%m-%d")
+        if select_freq == 'year':
+            select_index = [date.year]
+        elif select_freq == 'month':
+            select_index = [date.year, date.month]
+        else:
+            select_index = None
+    return select_freq, select_index, date
 
-    plt.figure(1, figsize=(12, 12))
-    plt.axis('off')
-    fig_wordcloud = plt.imshow(wordcloud_object)
-    # plt.show()
-    return fig_wordcloud
 
 # ----- INITIALIZE -----
 # --- Define params
 filepath_input_data = 'assets'
 # filepath_input_data = 'application/assets'  ############### take out application
 filename_input_data = 'count_text_messages_daily.csv'
+
 filepath_wc_data = 'assets'
 # filepath_wc_data = os.path.join('application', 'assets')    ############### take out application
 filename_wc_data = 'word_clouds.pkl'
-# filepath = 'output_graphs'      # folder(s) in S3 bucket specifying where to save graph object jsons (as a result of clicking "save" on the website
-# filename = 'saved_graph.txt'    # specify name of graph object json
-# bucket_name = os.environ.get('S3_BUCKET')       # Environmental variable configured through Elastic Beanstalk web interface. Name can be specified as free text in console.
-# aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID') # Environmental variable configured through Elastic Beanstalk web interface. Name can be specified as free text in console.
-# aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY') # Environmental variable configured through Elastic Beanstalk web interface. Name can be specified as free text in console.
 select_port = 8080      # Beanstalk expects it to be running on 8080
 plot_properties = {'background_color': 'white', 'cmap': 'magma', 'max_font_size': 40, 'scale': 10, 'random_state': 1}
 
+select_phone = None
+select_freq = 'all'
+select_index = None
+DATE_YEAR_OLD = 0
+DATE_MONTH_OLD = 0
+
 # --- Calculations
-# file_loc = os.path.join(filepath, filename)
-# file_loc = filepath + '/' + filename
 file_loc_input_data = os.path.join(filepath_input_data, filename_input_data)
 file_loc_wc_data = os.path.join(filepath_wc_data, filename_wc_data)
 
@@ -107,17 +143,11 @@ with open(file_loc_wc_data, "rb") as input_file:
     word_clouds = pickle.load(input_file)
 
 
-# Specify S3 read/write params
-# s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
-# s3_resource = boto3.resource('s3')
-
-
 # ----- START APPLICATION ------
 # Step 1. Launch the application
 app = dash.Dash(__name__, meta_tags=[
         {"name": "viewport", "content": "width=device-width, initial-scale=1, user-scalable=0"}
     ])
-
 
 # Step 3. Create a plotly figure
 def serve_layout():
@@ -129,33 +159,27 @@ def serve_layout():
         fig = go.Figure(data=data_temp)
 
         # wordcloud
-        data_wc_temp = create_wc_fig_data(word_clouds, select_phone='5635804952', freq='year', select_index=['5635804952', 2016])
-        fig_wc_test = plot_wordcloud(data_wc_temp, plot_properties)
-        fig_wc = fig    #####
+        data_wc_temp, layout_wc_temp = create_wc_fig_data(word_clouds, select_phone=select_phone, freq=select_freq, select_index=select_index)
+        fig_wc = go.Figure(data=data_wc_temp, layout=layout_wc_temp)
 
     layout_temp = html.Div([
         html.Div(children=html.Div([html.H1("You talkin' to me?")])),
         html.Div(dcc.Input(id='input-box', type='text', placeholder='212-555-1212')),
         html.Button('Submit', id='button'),
+        html.Div(
+            dcc.Dropdown(
+                id='wc_agg_freq',
+                options=[{'value': 'month', 'label': 'monthly'}, {'value': 'year', 'label': 'annually'}, {'value': None, 'label': 'all'}],
+                value=None,
+                className='dropdown'
+            )),
+        dcc.Graph(id='wordcloud', figure=fig_wc),
         dcc.Graph(id='plot', figure=fig),
-        dcc.Graph(id='wordcloud', figure=fig_wc)])
-
-    #     html.Div(dcc.Input(id='input-box-friend', type='text', placeholder="FRIEND [First_name Last_name]")),
-    #     html.Div(
-    #         dcc.Dropdown(
-    #             id='relationship',
-    #             options=dropdown_labels,
-    #             value=None,
-    #             className='dropdown'
-    #         )),
-
-    #     html.Button(type='submit', id='save-button', children="Save Data"),
-    #     html.Ul(id="file-list"),
-    #     html.Div(children=html.Label(["Python code: ", html.A('https://github.com/mallory-archer/cocktail_party/',
-    #                                                           href='https://github.com/mallory-archer/cocktail_party/',
-    #                                                           style={'color': '#ad1457'})],
-    #                                  style={'color': '#E9DDE1'}))
-    # ])
+        html.Div(children=html.Label(["Python code: ", html.A('https://github.com/mallory-archer/text_blitz/',
+                                                              href='https://github.com/mallory-archer/text_blitz/',
+                                                              style={'color': '#ad1457'})],
+                                     style={'color': '#E9DDE1'}))
+    ])
     return layout_temp
 
 
@@ -169,137 +193,50 @@ app.layout = serve_layout
               [State('input-box', 'value'), State('plot', 'figure')]
               )
 def update_figure(n_clicks, phone_number, fig_updated):
-    # if value and value_friend:
-    #     G.add_nodes_from([value.strip().title()])
-    #     G.add_edge(value.strip().title(), value_friend.strip().title(), label=value_relationship)
     if phone_number is not None:
         phone_number = remove_non_numeric(phone_number)
 
     data_temp = create_fig_data(df, phone_number)
     fig_updated = go.Figure(data=data_temp)
 
-
-    # fig_updated = create_fig_data()
-    # if n_clicks_save is not None:
-    #     try:
-    #         save_graph_object_to_s3(G, s3_resource, bucket_name, file_loc)
-    #     except:
-    #         None
     return fig_updated
 
 
-# @app.callback(Output('wordcloud', 'figure'),
-#               [Input('button', 'n_clicks')],
-#               [State('input-box', 'value'), State('wordcloud', 'figure')]
-#               )
-# def update_figure(n_clicks, phone_number, fig_wc_updated):
-#     # if value and value_friend:
-#     #     G.add_nodes_from([value.strip().title()])
-#     #     G.add_edge(value.strip().title(), value_friend.strip().title(), label=value_relationship)
-#     if phone_number is not None:
-#         phone_number = remove_non_numeric(phone_number)
-#
-#     # data_temp = create_fig_data(df, phone_number)
-#     # fig_updated = go.Figure(data=data_temp)
-#
-#     data_wc_temp = create_wc_fig_data(word_clouds, select_phone=phone_number, freq='year', select_index=[phone_number, 2016])
-#     fig_wc_updated = plot_wordcloud(data_wc_temp, plot_properties)
-#
-#     # fig_updated = create_fig_data()
-#     # if n_clicks_save is not None:
-#     #     try:
-#     #         save_graph_object_to_s3(G, s3_resource, bucket_name, file_loc)
-#     #     except:
-#     #         None
-#     return fig_wc_updated
+@app.callback(Output('wordcloud', 'figure'),
+              [Input('button', 'n_clicks'), Input('plot', 'clickData')],
+              [State('input-box', 'value'), State('wordcloud', 'figure'), State('wc_agg_freq', 'value')]
+              )
+def update_figure(n_clicks, clickData, phone_number, fig_wc_updated, select_freq):
+    print(select_freq)
+    global DATE_YEAR_OLD, DATE_MONTH_OLD
+    if phone_number is not None:
+        phone_number = remove_non_numeric(phone_number)
 
+    if select_freq is None:
+        select_freq = 'all'
 
+    # Check to see if need to update wordclou based on changing hover input (still in same month or year?)
+    select_freq, select_index, date = check_for_hover_change(clickData, select_freq)
+    try:
+        if select_freq == 'year':
+            recalc = (date.year != DATE_YEAR_OLD)
+            DATE_YEAR_OLD = date.year
+        elif select_freq == 'month':
+            recalc = ((date.year != DATE_YEAR_OLD) or (date.month != DATE_MONTH_OLD))
+            DATE_YEAR_OLD = date.year
+            DATE_MONTH_OLD = date.month
+        else:
+            recalc = True
+    except:
+        recalc = True
+        DATE_YEAR_OLD = 0
+        DATE_MONTH_OLD = 0
 
-#==========================================================================
-# def create_wordcloud(data, stopwords, max_words):
-#     try:
-#         wordcloud_object = WordCloud(
-#             stopwords=stopwords,
-#             max_words=max_words
-#         ).generate(str(data))
-#     except:
-#         wordcloud_object = None
-#     return wordcloud_object
+    if recalc:
+        data_wc_temp, layout_wc_temp = create_wc_fig_data(word_clouds, select_phone=phone_number, freq=select_freq, select_index=select_index)
+        fig_wc_updated = go.Figure(data=data_wc_temp, layout=layout_wc_temp)
 
-
-# def plot_wordcloud(wordcloud_object, plot_properties):
-#     for prop in plot_properties.keys():
-#         # wordcloud_object[prop] = plot_properties[prop]
-#         wordcloud_object.__setattr__(prop, plot_properties[prop])
-#
-#     plt.figure(1, figsize=(12, 12))
-#     plt.axis('off')
-#     plt.imshow(wordcloud_object)
-#     plt.show()
-
-
-# def get_word_clouds(df, select_phone, freq, max_words):
-#     stopwords = set(STOPWORDS)
-#
-#     # pare dataframe to selected phone numbers
-#     if select_phone is not None:
-#         df = df.loc[df.phone.isin(select_phone)].reindex()
-#
-#     # remove characters not relevant for word cloud and convert all to lower case
-#     df['text'] = df['text'].apply(funcs.remove_non_ascii)
-#     df['text'] = df['text'].str.lower()
-#
-#     # create dataframe by phone number and desired level of frequency
-#     freq_groupby_map = {'year': ['year'], 'month': ['year', 'month'], 'day': ['year', 'month', 'day'], 'all': []}
-#     try:
-#         df_grouped = pd.DataFrame(df[['phone', 'text'] + freq_groupby_map[freq]].groupby(['phone'] + freq_groupby_map[freq]).text.agg(funcs.cat_texts))
-#     except KeyError:
-#         print("Invalid frequency, 'freq' must be 'day', 'month', 'year', or None")
-#
-#     # generate word clouds
-#     df_wordcloud = df_grouped['text'].apply(create_wordcloud, stopwords=stopwords, max_words=max_words)
-#
-#     return df_wordcloud
-
-
-# def print_wordclouds_to_json(df, output_path, fn):
-#     df = df.apply(lambda x: x.words_)
-#     df.to_json(os.path.join(output_path, fn + '.json'), orient='index')
-
-
-# # ----- word cloud data ----
-# fn_wordcloud_objects = 'wordcloud_objects'
-# # select_phone = None     #['5635804952', '5635802952']     # can be a list of phone numbers (as strings), note single phone number just be in 1-element list, set to 'None' if all phone numbers are to be run
-# freq_level_wordcloud = 'month'
-# max_words_wordcloud = 100
-
-# # ===== GET WORDCLOUD DATA =====
-# select_phone = df_freq_sum.loc[df_freq_sum['count'] >= 10].index.tolist()
-# df_wordcloud_objects = create_text_summary_data.get_word_clouds(df_messages, select_phone, freq=freq_level_wordcloud, max_words=max_words_wordcloud)
-# if write_to_file:
-#     df_wordcloud_objects.to_pickle(os.path.join(output_path, fn_wordcloud_objects + '_' + freq_level_wordcloud))
-#     create_text_summary_data.print_wordclouds_to_json(df_wordcloud_objects, output_path, fn=fn_wordcloud_objects + '_' + freq_level_wordcloud)
-#
-#
-# # plot_properties = {'background_color': 'white', 'max_font_size': 40, 'scale': 10, 'random_state': 1}
-# # create_text_summary_data.plot_wordcloud(df_wordcloud_objects.iloc[10], plot_properties)
-# print(df_wordcloud_objects.loc[['2165262546', 2018, 4],].iloc[0].words_)
-
-# # ===== GET WORDCLOUD DATA =====
-# select_phone = df_freq_sum.loc[df_freq_sum['count'] >= 10].index.tolist()
-# df_wordcloud_objects = create_text_summary_data.get_word_clouds(df_messages, select_phone, freq=freq_level_wordcloud, max_words=max_words_wordcloud)
-# if write_to_file:
-#     df_wordcloud_objects.to_pickle(os.path.join(output_path, fn_wordcloud_objects + '_' + freq_level_wordcloud))
-#     create_text_summary_data.print_wordclouds_to_json(df_wordcloud_objects, output_path, fn=fn_wordcloud_objects + '_' + freq_level_wordcloud)
-#
-#
-# # plot_properties = {'background_color': 'white', 'max_font_size': 40, 'scale': 10, 'random_state': 1}
-# # create_text_summary_data.plot_wordcloud(df_wordcloud_objects.iloc[10], plot_properties)
-# print(df_wordcloud_objects.loc[['2165262546', 2018, 4],].iloc[0].words_)
-
-
-              # [Input('button', 'n_clicks'), Input('save-button', 'n_clicks')],
-              # [State('input-box', 'value'), State('input-box-friend', 'value'), State('relationship', 'value'), State('plot', 'figure')]
+    return fig_wc_updated
 
 # Step 6. Add the server clause
 application = app.server

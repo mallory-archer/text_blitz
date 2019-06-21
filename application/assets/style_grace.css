@@ -1,0 +1,145 @@
+body {
+	background-color: #5c595a;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #ee5c5d;
+	font-family: monospace;
+    font-weight: 200;
+    font-size: 16;
+    font-style: normal;
+    letter-spacing: normal;
+    text-align: center;
+    padding: 2px;
+	background-color: #5c595a
+}
+
+input {
+  display: block;
+  width: 75%;
+  position: relative;
+  background-color: #E9DDE1;
+  border-radius: 4px;
+  border: 0px solid #ad1457;
+  color: #ad1457;
+  height: 36px;
+  text-align: center;
+  font-family: monospace;
+  font-size: medium;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+input::placeholder {
+  color: #5c595a;
+}
+
+::-webkit-input-placeholder {  /* Chrome/Opera/Safari */
+  color: #ad1457;
+}
+::-moz-placeholder {  /* Firefox 19+ */
+  color: #ad1457;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: #ad1457;
+}
+:-ms-input-placeholder {  /* Edge/IE 10+ */
+  color: #ad1457;
+}
+
+.dropdown {
+  display: block;
+  width: 75%;
+  margin: auto;
+  border: 0px;
+}
+
+.Select-control {
+	border: 0px;
+	
+}
+
+.Select-multi-value-wrapper {
+	position: relative;
+	background-color: #E9DDE1;
+	border-radius: 4px;
+	border: 0px solid #ad1457;
+	color: #ad1457;
+	height: 36px;
+	text-align: center;
+	font-family: monospace;
+	font-size: medium;
+}
+
+
+.Select-arrow-zone {
+	background-color: #ad1457;
+}
+
+
+.Select-arrow {
+	border-top-color: #E9DDE1;
+	border-right-color: transparent;
+	border-left-color: transparent;
+	border-bottom-color: transparent;	
+}
+
+button {
+    color: #E9DDE1;
+    background-color: #ad1457;
+    border: 0px;
+    display: block;
+    font-family: monospace;
+	font-size: large;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 5px;
+}
+
+
+/*
+font: 400 13.3333px monospace;
+.Select-multi-value-wrapper::placeholder {
+  color: #E9DDE1;
+}
+  
+
+title_style_dict = {color: ee5c5d;
+                     font-family: monospace;
+                     font-weight: 200;
+                     font-size: 16;
+                     font-style: normal;
+                     letter-spacing: normal;
+                     text-align: center;
+                     padding: 2px;
+                     backgroundColor: 5c595a}
+ box_style_dict = {max-width: 80%;
+                   position: relative;
+                   margin: auto;
+                   background-color: 5c595a;
+                   border-radius: 4px;
+                   border: 3px solid ad1457;
+                   color: fec88c;
+                   display: block;
+                   border-spacing: 0px;
+                   border-collapse: separate;
+                   height: 36px;
+                   overflow: hidden;
+                   text-align: center;
+                   font-family: monospace;
+                   font-size: medium}
+ dropdown_style_dict = {max-width: 100%;
+                   position: relative;
+                   background-color: 5c595a;
+                   border-radius: 4px;
+                   border: 1.5px solid ad1457;
+                   color: fec88c;
+                   height: 36px;
+                   text-align: center;
+                   font-family: monospace;
+                   font-size: medium}
+*/

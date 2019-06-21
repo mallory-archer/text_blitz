@@ -35,7 +35,7 @@ def get_word_clouds(df, select_phone, freq, stopwords, max_words):
     # create dataframe by phone number and desired level of frequency
     freq_groupby_map = {'year': ['year'], 'month': ['year', 'month'], 'day': ['year', 'month', 'day'], 'all': []}
     try:
-        if (select_phone is None) or (select_phone == ''):
+        if (select_phone[0] is None) or (select_phone[0] == ''):
             if freq == 'all':
                 df_grouped = pd.DataFrame(data={'text': [df.text.str.cat(sep=' ')]}).reindex()
             else:
@@ -53,15 +53,14 @@ def get_word_clouds(df, select_phone, freq, stopwords, max_words):
 
 
 # --- input parameters
-filepath_input_data = 'input_data'     #### DELETE DATA PROCESS WHEN RUNNING
+filepath_input_data = os.path.join('data_process', 'input_data')     #### DELETE DATA PROCESS WHEN RUNNING
 filename_input_data = 'messages_table.json'
-filepath_output_data = 'wordclouds'         #### DELETE DATA PROCESS WHEN RUNNING
+filepath_output_data = os.path.join('data_process', 'wordclouds')         #### DELETE DATA PROCESS WHEN RUNNING
 filename_output_data = 'word_clouds.pkl'
 max_words = 100
 
 #####
-select_phone = ['2165262546', '5635804952']     # + [None]
-freq = ['all', 'year']      # 'month', 'day']
+freq = ['all', 'year', 'month']      # 'month', 'day']
 #####
 
 # --- calculations
@@ -69,16 +68,30 @@ file_loc_input_data = os.path.join(filepath_input_data, filename_input_data)
 file_loc_output_data = os.path.join(filepath_output_data, filename_output_data)
 df_messages = pd.read_json(file_loc_input_data)
 stopwords = set(STOPWORDS)
+#####
+select_phone = [None] + list(df_messages['phone'].unique())
+#####
 
+i = 0
 word_clouds = dict()
 for p in select_phone:
+    if p is None:
+        p_key = 'all'
+    else:
+        p_key = p
+    print('Working on phone: ' + p_key)
+
     temp_dict = dict()
-    print('Working on phone: ' + p)
     for f in freq:
         print('Working on freq: ' + f)
         wordcloud_object = get_word_clouds(df_messages.reindex(), [p], f, stopwords, max_words)
         temp_dict.update({f: wordcloud_object})
-    word_clouds.update({p: temp_dict})
+    word_clouds.update({p_key: temp_dict})
+    i = i+1
+    if (i % 100) == 0:
+        print('Saving after iteration: ' + str(i))
+        with open(file_loc_output_data, "wb") as f:
+            pickle.dump(word_clouds, f)
 
 # save word cloud data objects
 with open(file_loc_output_data, "wb") as f:
