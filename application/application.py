@@ -3,7 +3,6 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 
-import plotly.colors as py_colors
 import plotly.graph_objs as go
 
 import os
@@ -11,6 +10,7 @@ import pandas as pd
 import pickle
 import random
 import datetime
+
 
 # ----- FUNCTIONS -----
 def remove_non_numeric(x):
@@ -50,13 +50,56 @@ def create_fig_data(df, phone_number):
     # Create a trace
     trace = go.Scatter(
         x=select_x,
-        y=select_y
+        y=select_y,
+        mode='lines',
+        marker=dict(
+            color='#ad1457',
+            line=dict(
+                width=2
+            )
+        )
     )
+
+    # create a layout
+    layout = go.Layout(
+        autosize=True,
+        showlegend=False,
+        hovermode='closest',
+        dragmode='pan',
+        height=250,
+        margin=dict(b=50, t=0, r=10),
+        xaxis=dict(
+            tickfont=dict(
+                family='monospace',
+                size=14,
+                color='#E9DDE1'
+            ),
+            showticklabels=True,
+            zeroline=False
+        ),
+        yaxis=dict(
+            title='Count of Text Messages',
+            titlefont=dict(
+                size=14,
+                color='#E9DDE1'),
+            showticklabels=True,
+            tickfont=dict(
+                family='monospace',
+                size=14,
+                color='#E9DDE1'
+            ),
+            zeroline=True,
+            zerolinecolor='#E9DDE1'
+        ),
+        paper_bgcolor='#5c595a',
+        plot_bgcolor='#5c595a')
     data = [trace]
-    return data
+    return data, layout
 
 
 def create_wc_fig_data(word_clouds, select_phone, freq, select_index):
+    global COLOR_PALETTE, POSITIVE_WORDS, NEGATIVE_WORDS, NUM_WC_WORDS
+
     if (select_phone is None) or (select_phone ==''):
         select_data = word_clouds['all'][freq]
         if freq == 'all':
@@ -77,23 +120,41 @@ def create_wc_fig_data(word_clouds, select_phone, freq, select_index):
             # case4: select phone is string, frequency has index
             word_bag = select_data.ix[[[select_phone] + select_index]].values[0].words_
 
-    words = list(word_bag.keys())
+    wordbag_sorted = pd.DataFrame.from_dict(data=word_bag, orient='index', columns=['rel_freq']).sort_values(by='rel_freq', ascending=False)
+    words = list(wordbag_sorted.index)[0:NUM_WC_WORDS]
+    rel_freq = list(wordbag_sorted.rel_freq[0:NUM_WC_WORDS])
 
-    def map_weights(orig_weight, int_min, int_max):
-        return int(orig_weight * (int_max - int_min)) + int_min
-    weights = list(word_bag.values())
-    mapped_weights = [map_weights(x, 15, 35) for x in weights]
 
-    colors = [py_colors.DEFAULT_PLOTLY_COLORS[random.randrange(1, 10)] for i in range(30)]
-    data = go.Scatter(x=[random.random() for i in range(30)],
-                      y=[random.random() for i in range(30)],
+    def map_weights(orig_weight, orig_int_min, orig_int_max, int_min, int_max, n_int):
+        int_size = (int_max - int_min) / n_int
+        return round(((orig_weight - orig_int_min)/(orig_int_max - orig_int_min) * (int_max - int_min)) / int_size) * int_size + int_min
+    weights = rel_freq
+    mapped_weights = [map_weights(x, min(weights), max(weights), 10, 50, 5) for x in weights]
+
+    colors = pd.Series(['#fec88c']*len(words))
+    colors[list(pd.Series(words).isin(POSITIVE_WORDS))] = '#E9DDE1'
+    colors[list(pd.Series(words).isin(NEGATIVE_WORDS))] = '#ee5c5d'
+    data = go.Scatter(x=[random.random() for i in range(len(words))],
+                      y=[random.random() for i in range(len(words))],
                       mode='text',
                       text=words,
                       marker={'opacity': 0.3},
                       textfont={'size': mapped_weights,
                                 'color': colors})
     layout = go.Layout({'xaxis': {'showgrid': False, 'showticklabels': False, 'zeroline': False},
-                        'yaxis': {'showgrid': False, 'showticklabels': False, 'zeroline': False}})
+                        'yaxis': {'showgrid': False, 'showticklabels': False, 'zeroline': False}},
+                       autosize=True,
+                       height=250,
+                       paper_bgcolor='#5c595a',
+                       plot_bgcolor='#5c595a',
+                       margin=go.layout.Margin(
+                           b=0,
+                           t=0,
+                           pad=0,
+                           l=10,
+                           r=10
+                       )
+                       )
     return [data], layout
 
 
@@ -117,11 +178,9 @@ def check_for_hover_change(clickData, select_freq):
 # ----- INITIALIZE -----
 # --- Define params
 filepath_input_data = 'assets'
-# filepath_input_data = 'application/assets'  ############### take out application
 filename_input_data = 'count_text_messages_daily.csv'
 
 filepath_wc_data = 'assets'
-# filepath_wc_data = os.path.join('application', 'assets')    ############### take out application
 filename_wc_data = 'word_clouds.pkl'
 select_port = 8080      # Beanstalk expects it to be running on 8080
 plot_properties = {'background_color': 'white', 'cmap': 'magma', 'max_font_size': 40, 'scale': 10, 'random_state': 1}
@@ -131,6 +190,14 @@ select_freq = 'all'
 select_index = None
 DATE_YEAR_OLD = 0
 DATE_MONTH_OLD = 0
+NUM_WC_WORDS = 40
+
+# colormap
+COLOR_PALETTE = {'light grey': '#E9DDE1', 'yellow': '#fec88c', 'salmon': '#ee5c5d', 'magenta': '#ad1457', 'violet': '#8c2980', 'indigo': '#4a148c'}
+with open('assets/positive_words.txt') as f:
+    POSITIVE_WORDS = [word for line in f for word in line.split()]
+with open('assets/negative_words.txt') as f:
+    NEGATIVE_WORDS = [word for line in f for word in line.split()]
 
 # --- Calculations
 file_loc_input_data = os.path.join(filepath_input_data, filename_input_data)
@@ -155,8 +222,8 @@ def serve_layout():
         fig
     except NameError:
         # frequency plot
-        data_temp = create_fig_data(df, phone_number=None)
-        fig = go.Figure(data=data_temp)
+        data_temp, layout_temp = create_fig_data(df, phone_number=None)
+        fig = go.Figure(data=data_temp, layout=layout_temp)
 
         # wordcloud
         data_wc_temp, layout_wc_temp = create_wc_fig_data(word_clouds, select_phone=select_phone, freq=select_freq, select_index=select_index)
@@ -164,15 +231,27 @@ def serve_layout():
 
     layout_temp = html.Div([
         html.Div(children=html.Div([html.H1("You talkin' to me?")])),
-        html.Div(dcc.Input(id='input-box', type='text', placeholder='212-555-1212')),
-        html.Button('Submit', id='button'),
         html.Div(
-            dcc.Dropdown(
-                id='wc_agg_freq',
-                options=[{'value': 'month', 'label': 'monthly'}, {'value': 'year', 'label': 'annually'}, {'value': None, 'label': 'all'}],
-                value=None,
-                className='dropdown'
-            )),
+            className='row',
+            children=[
+                html.Div(
+                    dcc.Input(id='input-box', type='text', placeholder='212-555-1212'),
+                    style={'display': 'inline-block', 'width': '50%'}
+                ),
+                html.Div(
+                    dcc.Dropdown(
+                        id='wc_agg_freq',
+                        options=[{'value': 'month', 'label': 'monthly'}, {'value': 'year', 'label': 'annually'},
+                                 {'value': None, 'label': 'all'}],
+                        value=None,
+                        className='dropdown'
+                    ),
+                    style={'display': 'inline-block', 'width': '50%', 'vertical-align': 'middle'}
+                )
+            ],
+            style={'display': 'inline-block', 'width': '100%'}
+        ),
+        html.Button('Submit', id='button'),
         dcc.Graph(id='wordcloud', figure=fig_wc),
         dcc.Graph(id='plot', figure=fig),
         html.Div(children=html.Label(["Python code: ", html.A('https://github.com/mallory-archer/text_blitz/',
@@ -196,8 +275,8 @@ def update_figure(n_clicks, phone_number, fig_updated):
     if phone_number is not None:
         phone_number = remove_non_numeric(phone_number)
 
-    data_temp = create_fig_data(df, phone_number)
-    fig_updated = go.Figure(data=data_temp)
+    data_temp, layout_temp = create_fig_data(df, phone_number)
+    fig_updated = go.Figure(data=data_temp, layout=layout_temp)
 
     return fig_updated
 
@@ -207,7 +286,6 @@ def update_figure(n_clicks, phone_number, fig_updated):
               [State('input-box', 'value'), State('wordcloud', 'figure'), State('wc_agg_freq', 'value')]
               )
 def update_figure(n_clicks, clickData, phone_number, fig_wc_updated, select_freq):
-    print(select_freq)
     global DATE_YEAR_OLD, DATE_MONTH_OLD
     if phone_number is not None:
         phone_number = remove_non_numeric(phone_number)

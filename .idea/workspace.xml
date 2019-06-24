@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9431e941-0479-4147-8e56-f66c88f879a0" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_process/create_wordcloud_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_process/create_wordcloud_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/assets/style_grace.css" beforeDir="false" afterPath="$PROJECT_DIR$/application/assets/style_grace.css" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,14 +19,15 @@
       <file leaf-file-name="application.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/application.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="552">
-              <caret line="245" lean-forward="true" selection-start-line="245" selection-end-line="245" />
+            <state relative-caret-position="-1855">
+              <caret line="183" selection-start-line="183" selection-end-line="183" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
-                <element signature="e#355#403#0" />
-                <element signature="e#447#793#0" />
-                <element signature="e#839#1480#0" />
-                <element signature="e#4026#4129#0" />
+                <element signature="e#297#345#0" />
+                <element signature="e#389#735#0" />
+                <element signature="e#782#2368#0" />
+                <element signature="e#1975#5046#0" />
+                <element signature="e#4865#5331#0" />
               </folding>
             </state>
           </provider>
@@ -34,8 +36,8 @@
       <file leaf-file-name="application.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../cocktail_party/application/application.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="130">
-              <caret line="248" column="71" selection-start-line="248" selection-start-column="70" selection-end-line="248" selection-end-column="71" />
+            <state relative-caret-position="2550">
+              <caret line="161" column="46" selection-start-line="142" selection-start-column="4" selection-end-line="161" selection-end-column="46" />
             </state>
           </provider>
         </entry>
@@ -52,7 +54,6 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>clean_</find>
-      <find>print</find>
       <find>stopwords</find>
       <find>plot</find>
       <find>cmap</find>
@@ -66,6 +67,12 @@
       <find>dropdown_labels</find>
       <find>style</find>
       <find>css</find>
+      <find>print</find>
+      <find>height</find>
+      <find>application</find>
+      <find>map_weights</find>
+      <find>app.config</find>
+      <find>margin</find>
     </findStrings>
     <replaceStrings>
       <replace>SELECT_FREQ</replace>
@@ -91,16 +98,15 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-9" />
-    <option name="width" value="978" />
-    <option name="height" value="1039" />
+    <option name="x" value="-10" />
+    <option name="width" value="980" />
+    <option name="height" value="1040" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -140,6 +146,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -297,7 +304,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32905984" />
-      <window_info anchor="bottom" id="Python Console" order="7" weight="0.32905984" />
+      <window_info anchor="bottom" id="Python Console" order="7" weight="0.21225071" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.33618233" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32905984" />
@@ -340,17 +347,54 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/application/application.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1802">
+          <caret line="106" column="68" selection-start-line="106" selection-start-column="68" selection-end-line="106" selection-end-column="68" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#297#345#0" />
+            <element signature="e#389#735#0" />
+            <element signature="e#782#2368#0" />
+            <element signature="e#1975#5046#0" />
+            <element signature="e#4865#5331#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../cocktail_party/application/application.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2737">
+          <caret line="161" column="46" lean-forward="true" selection-start-line="142" selection-start-column="4" selection-end-line="161" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/application.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4165">
+          <caret line="245" lean-forward="true" selection-start-line="245" selection-end-line="245" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#297#345#0" />
+            <element signature="e#389#735#0" />
+            <element signature="e#782#2368#0" />
+            <element signature="e#1975#5046#0" />
+            <element signature="e#4865#5331#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../cocktail_party/application/application.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4216">
+          <caret line="248" column="71" selection-start-line="248" selection-start-column="70" selection-end-line="248" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/data_process/create_wordcloud_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1462">
           <caret line="86" column="15" selection-start-line="86" selection-start-column="15" selection-end-line="86" selection-end-column="15" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#143#352#0" />
-            <element signature="e#384#503#0" />
-            <element signature="e#528#558#0" />
-            <element signature="e#632#1875#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -365,13 +409,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1530">
           <caret line="91" column="20" lean-forward="true" selection-start-line="91" selection-start-column="20" selection-end-line="91" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#143#352#0" />
-            <element signature="e#384#503#0" />
-            <element signature="e#528#558#0" />
-            <element signature="e#632#1875#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -464,33 +501,34 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="151">
           <caret line="74" selection-start-line="74" selection-end-line="74" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#143#352#0" />
-            <element signature="e#384#503#0" />
-            <element signature="e#528#558#0" />
-            <element signature="e#632#1875#0" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../cocktail_party/application/application.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="248" column="71" selection-start-line="248" selection-start-column="70" selection-end-line="248" selection-end-column="71" />
+        <state relative-caret-position="2550">
+          <caret line="161" column="46" selection-start-line="142" selection-start-column="4" selection-end-line="161" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/dash/development/base_component.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="235" selection-start-line="235" selection-end-line="235" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/application/application.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="552">
-          <caret line="245" lean-forward="true" selection-start-line="245" selection-end-line="245" />
+        <state relative-caret-position="-1855">
+          <caret line="183" selection-start-line="183" selection-end-line="183" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <element signature="e#355#403#0" />
-            <element signature="e#447#793#0" />
-            <element signature="e#839#1480#0" />
-            <element signature="e#4026#4129#0" />
+            <element signature="e#297#345#0" />
+            <element signature="e#389#735#0" />
+            <element signature="e#782#2368#0" />
+            <element signature="e#1975#5046#0" />
+            <element signature="e#4865#5331#0" />
           </folding>
         </state>
       </provider>

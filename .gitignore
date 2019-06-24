@@ -108,3 +108,5 @@ data_process/input_data/
 data_process/wordclouds/
 application/assets/*.pkl
 application/assets/*.csv
+reference/
+*.zip

@@ -54,6 +54,7 @@ input::placeholder {
   width: 75%;
   margin: auto;
   border: 0px;
+  vertical-align: middle;
 }
 
 .Select-control {
