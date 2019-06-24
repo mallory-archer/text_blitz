@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9431e941-0479-4147-8e56-f66c88f879a0" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/assets/style_grace.css" beforeDir="false" afterPath="$PROJECT_DIR$/application/assets/style_grace.css" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,15 +16,10 @@
       <file leaf-file-name="application.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/application.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1855">
-              <caret line="183" selection-start-line="183" selection-end-line="183" />
+            <state relative-caret-position="272">
+              <caret line="198" column="54" selection-start-line="198" selection-start-column="54" selection-end-line="198" selection-end-column="54" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
-                <element signature="e#297#345#0" />
-                <element signature="e#389#735#0" />
-                <element signature="e#782#2368#0" />
-                <element signature="e#1975#5046#0" />
-                <element signature="e#4865#5331#0" />
               </folding>
             </state>
           </provider>
@@ -321,21 +313,21 @@
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.24983476" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="10" />
+      <window_info anchor="bottom" id="Version Control" order="3" weight="0.32905984" />
       <window_info active="true" anchor="bottom" id="Run" order="6" visible="true" weight="0.32905984" />
-      <window_info anchor="bottom" id="Find" order="5" weight="0.32905984" />
+      <window_info anchor="bottom" id="Python Console" order="0" weight="0.32905984" />
+      <window_info anchor="bottom" id="Message" order="4" />
       <window_info anchor="bottom" id="Debug" order="7" weight="0.4" />
       <window_info anchor="bottom" id="Terminal" order="1" weight="0.32905984" />
       <window_info anchor="bottom" id="Event Log" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="3" weight="0.32905984" />
+      <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="5" weight="0.32905984" />
       <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="4" />
-      <window_info anchor="bottom" id="Python Console" order="0" weight="0.32905984" />
     </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -349,15 +341,27 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/application/application.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3111">
+          <caret line="183" selection-start-line="183" selection-end-line="183" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../cocktail_party/application/application.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2550">
+          <caret line="161" column="46" selection-start-line="142" selection-start-column="4" selection-end-line="161" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/application.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1802">
           <caret line="106" column="68" selection-start-line="106" selection-start-column="68" selection-end-line="106" selection-end-column="68" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <element signature="e#297#345#0" />
-            <element signature="e#389#735#0" />
-            <element signature="e#782#2368#0" />
-            <element signature="e#1975#5046#0" />
-            <element signature="e#4865#5331#0" />
           </folding>
         </state>
       </provider>
@@ -375,11 +379,6 @@
           <caret line="245" lean-forward="true" selection-start-line="245" selection-end-line="245" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <element signature="e#297#345#0" />
-            <element signature="e#389#735#0" />
-            <element signature="e#782#2368#0" />
-            <element signature="e#1975#5046#0" />
-            <element signature="e#4865#5331#0" />
           </folding>
         </state>
       </provider>
@@ -520,15 +519,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/application/application.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1855">
-          <caret line="183" selection-start-line="183" selection-end-line="183" />
+        <state relative-caret-position="272">
+          <caret line="198" column="54" selection-start-line="198" selection-start-column="54" selection-end-line="198" selection-end-column="54" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-            <element signature="e#297#345#0" />
-            <element signature="e#389#735#0" />
-            <element signature="e#782#2368#0" />
-            <element signature="e#1975#5046#0" />
-            <element signature="e#4865#5331#0" />
           </folding>
         </state>
       </provider>

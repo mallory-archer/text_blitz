@@ -194,9 +194,9 @@ NUM_WC_WORDS = 40
 
 # colormap
 COLOR_PALETTE = {'light grey': '#E9DDE1', 'yellow': '#fec88c', 'salmon': '#ee5c5d', 'magenta': '#ad1457', 'violet': '#8c2980', 'indigo': '#4a148c'}
-with open('assets/positive_words.txt') as f:
+with open('assets/positive_words.txt', errors='ignore') as f:
     POSITIVE_WORDS = [word for line in f for word in line.split()]
-with open('assets/negative_words.txt') as f:
+with open('assets/negative_words.txt', errors='ignore') as f:
     NEGATIVE_WORDS = [word for line in f for word in line.split()]
 
 # --- Calculations
